@@ -15,7 +15,7 @@ func TestBackgroundNotTODO(t *testing.T) {
 	}
 }
 
-func TestCanceledContext(t *testing.T) {
+func TestWithCancel(t *testing.T) {
 	ctx, cancel := WithCancel(Background())
 
 	if err := ctx.Err(); err != nil {
@@ -29,7 +29,7 @@ func TestCanceledContext(t *testing.T) {
 	}
 }
 
-func TestCanceledContextConcurrent(t *testing.T) {
+func TestWithCancelConcurrent(t *testing.T) {
 	ctx, cancel := WithCancel(Background())
 
 	time.AfterFunc(1*time.Second, cancel)
@@ -43,7 +43,7 @@ func TestCanceledContextConcurrent(t *testing.T) {
 	}
 }
 
-func TestCanceledWhenParentCanceled(t *testing.T) {
+func TestWithCancelPropagation(t *testing.T) {
 	ctxA, cancelA := WithCancel(Background())
 	ctxB, _ := WithCancel(ctxA)
 
@@ -60,7 +60,7 @@ func TestCanceledWhenParentCanceled(t *testing.T) {
 	}
 }
 
-func TestDeadline(t *testing.T) {
+func TestWithDeadline(t *testing.T) {
 	ctx, cancel := WithDeadline(Background(), time.Now().Add(2*time.Second))
 
 	then := time.Now()
@@ -78,7 +78,7 @@ func TestDeadline(t *testing.T) {
 	}
 }
 
-func TestValue(t *testing.T) {
+func TestWithValue(t *testing.T) {
 	tc := []struct {
 		key, val, keyRet, valRet interface{}
 		shouldPanic              bool
@@ -111,7 +111,7 @@ func TestValue(t *testing.T) {
 	}
 }
 
-func TestTimeoutErr(t *testing.T) {
+func TestDeadlineExceededIsTimeouter(t *testing.T) {
 	f := func(ctx Context) error {
 		<-ctx.Done()
 		return ctx.Err()
